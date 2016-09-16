@@ -1,0 +1,20 @@
+D:\work\UDPServer\UDPServer\bin\Release\UDPServer.exe.config
+D:\work\UDPServer\UDPServer\bin\Release\UDPServer.exe
+D:\work\UDPServer\UDPServer\bin\Release\UDPServer.pdb
+D:\work\UDPServer\UDPServer\obj\Release\UDPServer.FormMain.resources
+D:\work\UDPServer\UDPServer\obj\Release\UDPServer.Properties.Resources.resources
+D:\work\UDPServer\UDPServer\obj\Release\UDPServer.csproj.GenerateResource.Cache
+D:\work\UDPServer\UDPServer\obj\Release\UDPServer.exe
+D:\work\UDPServer\UDPServer\obj\Release\UDPServer.pdb
+e:\projects\UDPServer\UDPServer\bin\Release\UDPServer.exe.config
+e:\projects\UDPServer\UDPServer\obj\Release\UDPServer.exe
+e:\projects\UDPServer\UDPServer\obj\Release\UDPServer.pdb
+C:\visual studio projects\UDPServer\bin\Release\UDPServer.exe.config
+C:\visual studio projects\UDPServer\obj\Release\UDPServer.exe
+C:\visual studio projects\UDPServer\obj\Release\UDPServer.pdb
+C:\visual studio projects\UDPServer\bin\Release\UDPServer.exe
+C:\visual studio projects\UDPServer\bin\Release\UDPServer.pdb
+C:\visual studio projects\UDPServer\obj\Release\UDPServer.FormMain.resources
+C:\visual studio projects\UDPServer\obj\Release\UDPServer.Properties.Resources.resources
+C:\visual studio projects\UDPServer\obj\Release\UDPServer.csproj.GenerateResource.Cache
+C:\visual studio projects\UDPServer\obj\Release\UDPServer.csprojResolveAssemblyReference.cache
