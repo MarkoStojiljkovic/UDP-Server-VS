@@ -18,3 +18,4 @@ C:\visual studio projects\UDPServer\obj\Release\UDPServer.FormMain.resources
 C:\visual studio projects\UDPServer\obj\Release\UDPServer.Properties.Resources.resources
 C:\visual studio projects\UDPServer\obj\Release\UDPServer.csproj.GenerateResource.Cache
 C:\visual studio projects\UDPServer\obj\Release\UDPServer.csprojResolveAssemblyReference.cache
+C:\visual studio projects\UDPServer\obj\Release\UDPServer.FormStorage.resources

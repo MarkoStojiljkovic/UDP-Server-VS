@@ -174,16 +174,23 @@ namespace UDPServer
                 return;
             }
 
+            button2.Enabled = false;
             if (serverPtr != null)
             {
                 serverPtr.Kill = true;
-                Thread.Sleep(10);
+                while (!serverPtr.KillRdy)
+                {
+                    Thread.Sleep(20);
+                }
                 serverPtr.killMe();
                 Thread.Sleep(10);
                 serverPtr = null;
             }
             
             startUDPServer();
+
+            Thread.Sleep(1000);
+            button2.Enabled = true;
         }
 
         private bool validateIP()

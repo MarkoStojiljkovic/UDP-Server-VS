@@ -20,6 +20,7 @@ namespace UDPServer
         public Thread UDPThread = null;
         public FormMain formMain = null;
         public bool Kill = false;
+        public bool KillRdy = false;
 
         public Server(string s, int listeningPort, int sendingPort)
         {
@@ -134,9 +135,13 @@ namespace UDPServer
                 } // end if
                 if (Kill == true)
                 {
+                    if (socket.Available > 0)
+                    {
+                        continue;
+                    }
+                    KillRdy = true;
                     socket.Close();
-                    
-                    Thread.Sleep(500);
+                    Thread.Sleep(200);
                     return;
                 }
                 Thread.Sleep(10);
@@ -146,7 +151,11 @@ namespace UDPServer
 
         public void killMe()    // :(
         {
-            UDPThread.Abort();
+            //if (Thread.)
+            //{
+
+            //}
+            //UDPThread.Abort();
         }
 
 
