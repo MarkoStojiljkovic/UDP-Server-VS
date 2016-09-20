@@ -19,8 +19,9 @@ namespace UDPServer
       Application.EnableVisualStyles();
       Application.SetCompatibleTextRenderingDefault(false);
       FormMain formMain = new FormMain();
-      //server.formMain = formMain;
-      //formMain.server = server;
+            //server.formMain = formMain;
+            //formMain.server = server;
+      Storage.StorageInit();
       Application.Run(formMain);
     }
   }

@@ -121,8 +121,9 @@ namespace UDPServer
         private void button1_Click(object sender, EventArgs e)
         {
             //this.Hide();
-            FormStorage fs = new FormStorage();
-            fs.Show();
+            //FormStorage fs = new FormStorage();
+            //fs.Show();
+            //Storage.StorageInit();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -182,8 +183,7 @@ namespace UDPServer
                 {
                     Thread.Sleep(20);
                 }
-                serverPtr.killMe();
-                Thread.Sleep(10);
+                serverPtr.KillRdy = false; // Reset its value
                 serverPtr = null;
             }
             

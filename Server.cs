@@ -38,7 +38,7 @@ namespace UDPServer
             catch (Exception e)
             {
                 Console.WriteLine("An UDP Exception has occurred!" + e.ToString());
-                UDPThread.Abort();
+                //UDPThread.Abort();
             }
         }
 
@@ -56,9 +56,10 @@ namespace UDPServer
             catch (SocketException)
             {
                 formMain.SetStatusText("Status: ERROR");
-                UDPThread.Abort();
-                Thread.Sleep(10);
-                return;
+                Console.WriteLine("Couldn't create socket :( \n");
+                //UDPThread.Abort();
+                //Thread.Sleep(10);
+                return; // Abort all
             }
 
             Console.WriteLine("Waiting for a client...");
@@ -74,12 +75,13 @@ namespace UDPServer
             data = Encoding.ASCII.GetBytes(welcome);
             socket.Send(data, data.Length, sender);
             */
+            Console.WriteLine("TESTING LINE \n" + Thread.); // Print thread ID
             formMain.SetStatusText("Status: OK");
             while (true)
             {
                 if (socket.Available > 0)
                 {
-                    data = socket.Receive(ref sender);
+                    data = socket.Receive(ref sender); // Crashing here
                     //if (sender.Address.Equals(IPAdressToCompare)) // Is this IP we listen to 
                     //{
                     byte[] temp_data = new byte[100];
@@ -124,6 +126,11 @@ namespace UDPServer
                     string decodedMessage = MessageProcesser.formMessage();
                     formMain.SetText(decodedMessage);
 
+                    //Form message for text file
+                    decodedMessage = MessageProcesser.FormMessageForFile();
+                    Storage.UpdateFolderTimeStamp(); // Update file, in case it is new day
+                    Storage.AppendTextToFile(decodedMessage);
+
                     //IsoletedStorage.WriteToStorage(decodedMessage); // For now disabled
 
                     // Send ACK
@@ -135,10 +142,10 @@ namespace UDPServer
                 } // end if
                 if (Kill == true)
                 {
-                    if (socket.Available > 0)
-                    {
-                        continue;
-                    }
+                    //if (socket.Available > 0)
+                    //{
+                    //    continue;
+                    //}
                     KillRdy = true;
                     socket.Close();
                     Thread.Sleep(200);
