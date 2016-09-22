@@ -11,9 +11,11 @@ namespace UDPServer
     {
         static string currentTimeStamp = DateTime.Now.ToString("dd/MM/yyyy");
         static string currentFile;
+        static string lastMessageTimeStamp = "Not initialized yet ";
 
         public static void StorageInit() // Check does folders and files exist, and create them if not
         {
+            bool IsFileCreated = false;
             string path = AppDomain.CurrentDomain.BaseDirectory + @"log";
             
             if (!Directory.Exists(path))
@@ -27,9 +29,17 @@ namespace UDPServer
                 using (File.Create(path + GetFolderTimeStamp() + @".txt"))
                 {
                     Console.WriteLine("New file created");
+                    IsFileCreated = true;
                 }
             }
             currentFile = path + GetFolderTimeStamp() + @".txt"; // Pointer to the last file
+            if (IsFileCreated)
+            {
+                using (StreamWriter outputFile = new StreamWriter(currentFile, true))
+                {
+                    outputFile.WriteLine("Last event arrived at: " + lastMessageTimeStamp + "\r\n\r\n");
+                }
+            }
         }
 
         private static string GetFolderTimeStamp()
@@ -58,6 +68,7 @@ namespace UDPServer
                 using (StreamWriter outputFile = new StreamWriter(currentFile, true))
                 {
                     outputFile.WriteLine(s);
+                    lastMessageTimeStamp = GetFolderTimeStamp();
                 }
             }
             catch (DirectoryNotFoundException)

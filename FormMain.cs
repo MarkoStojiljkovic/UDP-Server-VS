@@ -22,7 +22,7 @@ namespace UDPServer
         {
             InitializeComponent();
             button1.Hide(); // Hide event log button
-            IsoletedStorage.InitStorage();
+            //IsoletedStorage.InitStorage();
         }
 
         public void SetText(string text)
@@ -87,25 +87,6 @@ namespace UDPServer
             {
                 serverPtr.Kill = true;
             }
-            
-
-            /*
-            while (server.UDPThread.IsAlive)
-            {
-              try
-              {
-                server.UDPThread.Interrupt();
-                if (!server.UDPThread.Join(2000))
-                {
-                  server.UDPThread.Abort();
-                }
-              }
-              catch (Exception ex)
-              {
-                MessageBox.Show(ex.Message.ToString());
-              }
-            }
-            */
         }
 
         private void FormMain_FormClosed(object sender, FormClosedEventArgs e)
@@ -130,8 +111,9 @@ namespace UDPServer
         {
             if (System.Text.RegularExpressions.Regex.IsMatch(textBox1.Text, "[^0-9.]"))
             {
-                MessageBox.Show("Please valid IP.");
+                MessageBox.Show("Please enter valid IP.");
                 textBox1.Text = textBox1.Text.Remove(textBox1.Text.Length - 1);
+                textBox1.SelectionStart = textBox1.TextLength;
             }
         }
 
@@ -179,17 +161,24 @@ namespace UDPServer
             if (serverPtr != null)
             {
                 serverPtr.Kill = true;
-                while (!serverPtr.KillRdy)
-                {
-                    Thread.Sleep(20);
-                }
-                serverPtr.KillRdy = false; // Reset its value
                 serverPtr = null;
             }
-            
-            startUDPServer();
 
-            Thread.Sleep(1000);
+            for (int i = 0; i < 3; i++) // Retry 3 times for server initialization
+            {
+                SetStatusText("Status: Waiting");
+                startUDPServer();
+                Thread.Sleep(200);
+                if (Server.noError)
+                {
+                    SetStatusText("Status: OK");
+                    break;
+                }
+            }
+            if (!Server.noError)
+            {
+                SetStatusText("Status: ERROR");
+            }
             button2.Enabled = true;
         }
 

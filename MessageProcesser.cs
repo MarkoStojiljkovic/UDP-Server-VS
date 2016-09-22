@@ -51,7 +51,7 @@ namespace UDPServer
 
             string decodedMessage =
                         alarmType
-                        + " JE" + " " + alarmStatus
+                        + " JE:" + " " + alarmStatus
                         + Environment.NewLine
                         + alarmDateStamp
                         + Environment.NewLine
