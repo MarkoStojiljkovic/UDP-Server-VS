@@ -15,6 +15,7 @@ namespace UDPServer
     public partial class FormMain : Form
     {
         public Server serverPtr = null;
+        public Server_v2 serverPtr2 = null;
         delegate void SetTextCallback(string text);
         public int serverIsDead = 1;
 
@@ -139,47 +140,58 @@ namespace UDPServer
 
         private void button2_Click(object sender, EventArgs e)
         {
-            
-            if (!validateIP())
-            {
-                return;
-            }
 
-            if (!validatePORT(textBox2))
+            if (!ValidateInput()) // Check IP and port number formatting
             {
-                MessageBox.Show("Invalid port number (number must be between 0 and 65535)");
-                return;
-            }
-
-            if (!validatePORT(textBox3))
-            {
-                MessageBox.Show("Invalid port number (number must be between 0 and 65535)");
                 return;
             }
 
             button2.Enabled = false;
-            if (serverPtr != null)
+
+            if (Server_v2.isActive)
             {
-                serverPtr.Kill = true;
-                serverPtr = null;
+                Server_v2.Kill = true;
+                Console.WriteLine("Phase Killing server \n");
+                Thread.Sleep(100);
+                //button2.Enabled = true;
+                //return;
             }
 
-            for (int i = 0; i < 3; i++) // Retry 3 times for server initialization
+            try
             {
-                SetStatusText("Status: Waiting");
-                startUDPServer();
-                Thread.Sleep(200);
-                if (Server.noError)
-                {
-                    SetStatusText("Status: OK");
-                    break;
-                }
+                startUDPServer2();
             }
-            if (!Server.noError)
+            catch (Exception)
             {
+
                 SetStatusText("Status: ERROR");
             }
+
             button2.Enabled = true;
+
+            //// old code
+            //if (serverPtr != null)
+            //{
+            //    serverPtr.Kill = true;
+            //    serverPtr = null;
+            //}
+
+            //for (int i = 0; i < 3; i++) // Retry 3 times for server initialization
+            //{
+            //    SetStatusText("Status: Waiting");
+            //    startUDPServer();
+            //    Thread.Sleep(200);
+            //    if (Server.noError)
+            //    {
+            //        SetStatusText("Status: OK");
+            //        break;
+            //    }
+            //}
+            //if (!Server.noError)
+            //{
+            //    SetStatusText("Status: ERROR");
+            //}
+            //button2.Enabled = true;
         }
 
         private bool validateIP()
@@ -288,6 +300,32 @@ namespace UDPServer
             this.serverPtr = server;
         }
 
-        
+        public void startUDPServer2()
+        {
+            Server_v2 server = new Server_v2(textBox1.Text, Int32.Parse(textBox2.Text), Int32.Parse(textBox3.Text));
+            Server_v2.formMain = this;
+            this.serverPtr2 = server;
+        }
+
+        bool ValidateInput()
+        {
+            if (!validateIP())
+            {
+                return false;
+            }
+
+            if (!validatePORT(textBox2))
+            {
+                MessageBox.Show("Invalid port number (number must be between 0 and 65535)");
+                return false;
+            }
+
+            if (!validatePORT(textBox3))
+            {
+                MessageBox.Show("Invalid port number (number must be between 0 and 65535)");
+                return false;
+            }
+            return true;
+        }
     }
 }

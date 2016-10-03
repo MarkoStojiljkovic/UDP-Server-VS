@@ -63,7 +63,7 @@ namespace UDPServer
 
         public static string FormMessageForFile()
         {
-            string decodedMessage = extractedInfo[0] + " " + extractedInfo[1] + " " + extractedInfo[2] + " " + extractedInfo[3] + Environment.NewLine;
+            string decodedMessage = extractedInfo[0] + " " + extractedInfo[1] + " " + extractedInfo[2] + " " + extractedInfo[3] + "  " + DateTime.Now + Environment.NewLine;
             return decodedMessage;
         }
 
