@@ -81,7 +81,8 @@ namespace UDPServer
                         //IsoletedStorage.WriteToStorage(decodedMessage); // For now disabled
 
                         // Send ACK
-                        data = Encoding.ASCII.GetBytes("ACK");
+                        string packetStamp = MessageProcesser.GetPacketNumber();
+                        data = Encoding.ASCII.GetBytes("ACK" + " " + packetStamp);
                         socket.Send(data, data.Length, sender);
                         Console.WriteLine("Phase Data sent \n");
 
@@ -115,13 +116,27 @@ namespace UDPServer
         {
             byte[] temp_data = new byte[100];
             int y = 0;
-            for (int i = 0; i < data.Length; i++) // Replacing \n with \r\n
+            //for (int i = 0; i < data.Length; i++) // Replacing \n with \r\n
+            //{
+            //    if (data[i] == 0xA)
+            //    {
+            //        temp_data[y] = 0xD; // carriage return
+            //        y++;
+            //        temp_data[y] = 0xA; // new line
+            //        y++;
+            //    }
+            //    else
+            //    {
+            //        temp_data[y] = data[i];
+            //        y++;
+            //    }
+            //}
+
+            for (int i = 0; i < data.Length; i++)
             {
                 if (data[i] == 0xA)
                 {
-                    temp_data[y] = 0xD; // carriage return
-                    y++;
-                    temp_data[y] = 0xA; // new line
+                    temp_data[y] = 0x20; //  ' '
                     y++;
                 }
                 else
