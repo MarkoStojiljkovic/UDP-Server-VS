@@ -121,15 +121,15 @@ namespace UDPServer
                         }
 
                         // Extract information from message
-                        MessageProcesser.ExtractMessageInformations(temp_data2);
-                        // Form message to display
-                        string decodedMessage = MessageProcesser.formMessage();
-                        formMain.SetText(decodedMessage);
+                        //MessageProcesser.ExtractMessageInformations(temp_data2);
+                        //// Form message to display
+                        //string decodedMessage = MessageProcesser.formMessage();
+                        //formMain.SetText(decodedMessage);
 
-                        //Form message for text file
-                        decodedMessage = MessageProcesser.FormMessageForFile();
-                        Storage.UpdateFolderTimeStamp(); // Update file, in case it is new day
-                        Storage.AppendTextToFile(decodedMessage);
+                        ////Form message for text file
+                        //decodedMessage = MessageProcesser.FormMessageForFile();
+                        //Storage.UpdateFolderTimeStamp(); // Update file, in case it is new day
+                        //Storage.AppendTextToFile(decodedMessage);
 
                         //IsoletedStorage.WriteToStorage(decodedMessage); // For now disabled
 

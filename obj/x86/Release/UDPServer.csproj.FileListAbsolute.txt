@@ -1,0 +1,11 @@
+C:\visual studio projects\UDPServer\bin\x86\Release\UDPServer.exe.config
+C:\visual studio projects\UDPServer\bin\x86\Release\UDPServer.exe
+C:\visual studio projects\UDPServer\bin\x86\Release\UDPServer.pdb
+C:\visual studio projects\UDPServer\obj\x86\Release\UDPServer.csprojResolveAssemblyReference.cache
+C:\visual studio projects\UDPServer\obj\x86\Release\UDPServer.CommandsForm.resources
+C:\visual studio projects\UDPServer\obj\x86\Release\UDPServer.FormMain.resources
+C:\visual studio projects\UDPServer\obj\x86\Release\UDPServer.FormStorage.resources
+C:\visual studio projects\UDPServer\obj\x86\Release\UDPServer.Properties.Resources.resources
+C:\visual studio projects\UDPServer\obj\x86\Release\UDPServer.csproj.GenerateResource.Cache
+C:\visual studio projects\UDPServer\obj\x86\Release\UDPServer.exe
+C:\visual studio projects\UDPServer\obj\x86\Release\UDPServer.pdb

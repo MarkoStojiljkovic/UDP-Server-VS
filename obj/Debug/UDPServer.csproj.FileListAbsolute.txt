@@ -7,13 +7,14 @@ D:\work\UDPServer\UDPServer\obj\Debug\UDPServer.Properties.Resources.resources
 D:\work\UDPServer\UDPServer\obj\Debug\UDPServer.csproj.GenerateResource.Cache
 D:\work\UDPServer\UDPServer\obj\Debug\UDPServer.exe
 D:\work\UDPServer\UDPServer\obj\Debug\UDPServer.pdb
-C:\visual studio projects\UDPServer\obj\Debug\UDPServer.FormMain.resources
-C:\visual studio projects\UDPServer\obj\Debug\UDPServer.Properties.Resources.resources
-C:\visual studio projects\UDPServer\obj\Debug\UDPServer.csproj.GenerateResource.Cache
 C:\visual studio projects\UDPServer\bin\Debug\UDPServer.exe.config
 C:\visual studio projects\UDPServer\bin\Debug\UDPServer.exe
 C:\visual studio projects\UDPServer\bin\Debug\UDPServer.pdb
+C:\visual studio projects\UDPServer\obj\Debug\UDPServer.CommandsForm.resources
+C:\visual studio projects\UDPServer\obj\Debug\UDPServer.FormMain.resources
+C:\visual studio projects\UDPServer\obj\Debug\UDPServer.FormStorage.resources
+C:\visual studio projects\UDPServer\obj\Debug\UDPServer.Properties.Resources.resources
+C:\visual studio projects\UDPServer\obj\Debug\UDPServer.csproj.GenerateResource.Cache
 C:\visual studio projects\UDPServer\obj\Debug\UDPServer.exe
 C:\visual studio projects\UDPServer\obj\Debug\UDPServer.pdb
 C:\visual studio projects\UDPServer\obj\Debug\UDPServer.csprojResolveAssemblyReference.cache
-C:\visual studio projects\UDPServer\obj\Debug\UDPServer.FormStorage.resources

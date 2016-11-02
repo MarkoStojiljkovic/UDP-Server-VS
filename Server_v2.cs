@@ -52,7 +52,8 @@ namespace UDPServer
         {
             using (socket)
             {
-                formMain.SetStatusText("Status: OK");
+                formMain.SetStatusText("Status: Running");
+                formMain.ChangeButtonState(true);
                 while (true)
                 {
                     byte[] data = new byte[1024];
@@ -65,26 +66,17 @@ namespace UDPServer
                         data = socket.Receive(ref tempasd);
                         Console.WriteLine("Phase Receive done \n");
 
-                        byte[] finalData = AdjustBuffer(data);
-
-                        // Extract information from message
-                        MessageProcesser.ExtractMessageInformations(finalData);
-                        // Form message to display
-                        string decodedMessage = MessageProcesser.formMessage();
-                        formMain.SetText(decodedMessage);
-
-                        //Form message for text file
-                        decodedMessage = MessageProcesser.FormMessageForFile();
-                        Storage.UpdateFolderTimeStamp(); // Update file, in case it is new day
-                        Storage.AppendTextToFile(decodedMessage);
-
-                        //IsoletedStorage.WriteToStorage(decodedMessage); // For now disabled
-
-                        // Send ACK
-                        string packetStamp = MessageProcesser.GetPacketNumber();
-                        data = Encoding.ASCII.GetBytes("ACK" + " " + packetStamp);
-                        socket.Send(data, data.Length, sender);
-                        Console.WriteLine("Phase Data sent \n");
+                        if (data.GetLength(0) == 4) // Is this get status response
+                        {
+                            MessageProcesser.ProcessStatusResponse(data);
+                        }
+                        else // For now it is only received Alarm 
+                        {
+                            byte[] finalMessage = MessageProcesser.ProcessAlarmResponse(data); // This will: decode, print text, save log and return ACK
+                            socket.Send(finalMessage, finalMessage.Length, sender);
+                            Console.WriteLine("Phase Data sent \n");
+                        }
+                        
 
                     }
 
@@ -110,62 +102,22 @@ namespace UDPServer
 
 
 
-
-
-        byte[] AdjustBuffer(byte[] data)
+        public void SendCommand(string s)
         {
-            byte[] temp_data = new byte[100];
-            int y = 0;
-            //for (int i = 0; i < data.Length; i++) // Replacing \n with \r\n
-            //{
-            //    if (data[i] == 0xA)
-            //    {
-            //        temp_data[y] = 0xD; // carriage return
-            //        y++;
-            //        temp_data[y] = 0xA; // new line
-            //        y++;
-            //    }
-            //    else
-            //    {
-            //        temp_data[y] = data[i];
-            //        y++;
-            //    }
-            //}
-
-            for (int i = 0; i < data.Length; i++)
+            byte[] data = Encoding.ASCII.GetBytes(s);
+            try
             {
-                if (data[i] == 0xA)
-                {
-                    temp_data[y] = 0x20; //  ' '
-                    y++;
-                }
-                else
-                {
-                    temp_data[y] = data[i];
-                    y++;
-                }
+                socket.Send(data, data.Length, sender);
+                Console.WriteLine("Sending command: {0}  = success \n", s);
             }
-
-            // Process message
-            int endPtr = 0;
-            for (int i = 0; i < temp_data.Length; i++) // Find actual length
+            catch (Exception)
             {
-                if (temp_data[i] == 0)
-                {
-                    endPtr = i;
-                    break;
-                }
+
+                Console.WriteLine("Sending command: {0}  = fail \n", s);
             }
-
-            byte[] temp_data2 = new byte[endPtr]; // Create new array with precise length
-
-            for (int i = 0; i < temp_data2.Length; i++)  // And fill it
-            {
-                temp_data2[i] = temp_data[i];
-            }
-
-            return temp_data2;
         }
+
+        
 
 
     }

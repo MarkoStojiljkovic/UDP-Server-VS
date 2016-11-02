@@ -9,7 +9,7 @@ namespace UDPServer
 {
     class Storage
     {
-        static string currentTimeStamp = DateTime.Now.ToString("dd/MM/yyyy");
+        static string currentTimeStamp = DateTime.Now.ToString("ddMMyyyy");
         static string currentFile;
         static string lastMessageTimeStamp = "Not initialized yet ";
 
@@ -44,14 +44,14 @@ namespace UDPServer
 
         private static string GetFolderTimeStamp()
         {
-            string s = DateTime.Now.ToString("dd/MM/yyyy");
+            string s = DateTime.Now.ToString("ddMMyyyy");
             
             return s;
         }
 
         public static void UpdateFolderTimeStamp()
         {
-            string temp = DateTime.Now.ToString("dd/MM/yyyy"); // Check is it new day
+            string temp = DateTime.Now.ToString("ddMMyyyy"); // Check is it new day
             if (!temp.Equals(currentTimeStamp))
             {
                 currentTimeStamp = temp;

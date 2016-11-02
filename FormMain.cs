@@ -17,12 +17,14 @@ namespace UDPServer
         public Server serverPtr = null;
         public Server_v2 serverPtr2 = null;
         delegate void SetTextCallback(string text);
+        delegate void ChangeButtonStateCallback(bool status);
         public int serverIsDead = 1;
 
         public FormMain()
         {
             InitializeComponent();
             button1.Hide(); // Hide event log button
+            button3.Enabled = false;
             //IsoletedStorage.InitStorage();
         }
 
@@ -165,34 +167,19 @@ namespace UDPServer
             {
 
                 SetStatusText("Status: ERROR");
+                button3.Enabled = false;
             }
 
             button2.Enabled = true;
-
-            //// old code
-            //if (serverPtr != null)
-            //{
-            //    serverPtr.Kill = true;
-            //    serverPtr = null;
-            //}
-
-            //for (int i = 0; i < 3; i++) // Retry 3 times for server initialization
-            //{
-            //    SetStatusText("Status: Waiting");
-            //    startUDPServer();
-            //    Thread.Sleep(200);
-            //    if (Server.noError)
-            //    {
-            //        SetStatusText("Status: OK");
-            //        break;
-            //    }
-            //}
-            //if (!Server.noError)
-            //{
-            //    SetStatusText("Status: ERROR");
-            //}
-            //button2.Enabled = true;
         }
+
+        private void button3_Click(object sender, EventArgs e) // Commands button
+        {
+            CommandsForm cf = new CommandsForm();
+            cf.serverPtr2 = serverPtr2;
+            cf.Show();
+        }
+
 
         private bool validateIP()
         {
@@ -326,6 +313,19 @@ namespace UDPServer
                 return false;
             }
             return true;
+        }
+
+        public void ChangeButtonState(bool state)
+        {
+            if (this.button3.InvokeRequired)
+            {
+                ChangeButtonStateCallback d = new ChangeButtonStateCallback(ChangeButtonState);
+                this.Invoke(d, new object[] { state });
+            }
+            else
+            {
+                this.button3.Enabled = state;
+            }
         }
     }
 }

@@ -17,7 +17,7 @@ namespace UDPServer
         public FormStorage()
         {
             InitializeComponent();
-            textBox1.Text = IsoletedStorage.ReadFromStorage();
+            //textBox1.Text = IsoletedStorage.ReadFromStorage();
         }
 
         private void FormStorage_Load(object sender, EventArgs e)
