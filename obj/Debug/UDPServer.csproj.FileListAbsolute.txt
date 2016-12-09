@@ -18,3 +18,7 @@ C:\visual studio projects\UDPServer\obj\Debug\UDPServer.csproj.GenerateResource.
 C:\visual studio projects\UDPServer\obj\Debug\UDPServer.exe
 C:\visual studio projects\UDPServer\obj\Debug\UDPServer.pdb
 C:\visual studio projects\UDPServer\obj\Debug\UDPServer.csprojResolveAssemblyReference.cache
+C:\visual studio projects\UDPServer\bin\Debug\System.Net.Http.dll
+C:\visual studio projects\UDPServer\bin\Debug\System.Net.Http.xml
+C:\visual studio projects\UDPServer\bin\Debug\Oracle.ManagedDataAccess.dll
+C:\visual studio projects\UDPServer\obj\Debug\UDPServer.FormManualAddIP.resources

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Windows.Forms;
 using System.Media;
+using System.Globalization;
 
 namespace UDPServer
 {
@@ -19,13 +20,18 @@ namespace UDPServer
         delegate void SetTextCallback(string text);
         delegate void ChangeButtonStateCallback(bool status);
         public int serverIsDead = 1;
+        string oracleDB = "DATA SOURCE=192.168.2.98:1521/M2CDatabase;PERSIST SECURITY INFO=True;USER ID=NTPM;PASSWORD=NeticoPassword123;";
 
         public FormMain()
         {
             InitializeComponent();
-            button1.Hide(); // Hide event log button
-            button3.Enabled = false;
-            //IsoletedStorage.InitStorage();
+            button3.Enabled = false; // Disable button while program is trying to get data from database...
+
+            UpdateDatabase();
+            
+            //HashtableAndDatabaseClass.AddToHashTable("00:1E:C0:9B:78:E5", "192.168.2.22"); // Manualy added my NTPM
+            
+
         }
 
         public void SetText(string text)
@@ -69,7 +75,7 @@ namespace UDPServer
             }
         }
 
-        public void SetStatusText(string text)
+        public void SetStatusText(string text) // Change text to label with any class
         {
             if (this.label4.InvokeRequired)
             {
@@ -79,8 +85,19 @@ namespace UDPServer
             else
             {
                 this.label4.Text = text;
+            }
+        }
 
-
+        public void SetDBStatusText(string text) // Change text to label with any class
+        {
+            if (this.labelDB.InvokeRequired)
+            {
+                SetTextCallback d = new SetTextCallback(SetDBStatusText);
+                this.Invoke(d, new object[] { text });
+            }
+            else
+            {
+                this.labelDB.Text = text;
             }
         }
 
@@ -110,15 +127,15 @@ namespace UDPServer
             //Storage.StorageInit();
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-            if (System.Text.RegularExpressions.Regex.IsMatch(textBox1.Text, "[^0-9.]"))
-            {
-                MessageBox.Show("Please enter valid IP.");
-                textBox1.Text = textBox1.Text.Remove(textBox1.Text.Length - 1);
-                textBox1.SelectionStart = textBox1.TextLength;
-            }
-        }
+        //private void textBox1_TextChanged(object sender, EventArgs e)
+        //{
+        //    if (System.Text.RegularExpressions.Regex.IsMatch(textBox1.Text, "[^0-9.]"))
+        //    {
+        //        MessageBox.Show("Please enter valid IP.");
+        //        textBox1.Text = textBox1.Text.Remove(textBox1.Text.Length - 1);
+        //        textBox1.SelectionStart = textBox1.TextLength;
+        //    }
+        //}
 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
@@ -181,96 +198,100 @@ namespace UDPServer
         }
 
 
-        private bool validateIP()
-        {
-            byte[] toBytes = Encoding.ASCII.GetBytes(textBox1.Text);
-            // Check if empty field
-            if (toBytes.Length == 0) 
-            {
-                MessageBox.Show("You need to input something first");
-                return false;
-            }
-            // Check if minimum length provided (including dots)
-            if (toBytes.Length < 7)
-            {
-                MessageBox.Show("Wrong IP range");
-                return false;
-            }
-            // Check does field contain 3 dots
-            int numOfDots = 0;
-            for (int i = 0; i < toBytes.Length; i++)
-            {
-                if (toBytes[i] == '.') numOfDots++;
-            }
-            if (numOfDots != 3)
-            {
-                MessageBox.Show("Wrong IP range");
-                return false;
-            }
-            // Check that field does not start with dot or end with dot
-            if (toBytes[0] == '.')
-            {
-                MessageBox.Show("Wrong IP range");
-                return false;
-            }
-            if (toBytes[toBytes.Length - 1] == '.')
-            {
-                MessageBox.Show("Wrong IP range");
-                return false;
-            }
+        //private bool validateIP()
+        //{
+        //    byte[] toBytes = Encoding.ASCII.GetBytes(textBox1.Text);
+        //    // Check if empty field
+        //    if (toBytes.Length == 0) 
+        //    {
+        //        MessageBox.Show("You need to input something first");
+        //        return false;
+        //    }
+        //    // Check if minimum length provided (including dots)
+        //    if (toBytes.Length < 7)
+        //    {
+        //        MessageBox.Show("Wrong IP range");
+        //        return false;
+        //    }
+        //    // Check does field contain 3 dots
+        //    int numOfDots = 0;
+        //    for (int i = 0; i < toBytes.Length; i++)
+        //    {
+        //        if (toBytes[i] == '.') numOfDots++;
+        //    }
+        //    if (numOfDots != 3)
+        //    {
+        //        MessageBox.Show("Wrong IP range");
+        //        return false;
+        //    }
+        //    // Check that field does not start with dot or end with dot
+        //    if (toBytes[0] == '.')
+        //    {
+        //        MessageBox.Show("Wrong IP range");
+        //        return false;
+        //    }
+        //    if (toBytes[toBytes.Length - 1] == '.')
+        //    {
+        //        MessageBox.Show("Wrong IP range");
+        //        return false;
+        //    }
 
-            // Consecutive dots check
-            int dotFlag = 0;
-            for (int i = 0; i < toBytes.Length; i++)
-            {
-                if (toBytes[i] == '.')
-                {
-                    if (dotFlag == 1)
-                    {
-                        MessageBox.Show("Wrong IP range");
-                        return false;
-                    }
-                    dotFlag = 1;
-                }
-                else
-                { // not a dot
-                    dotFlag = 0;
-                }
-            }
+        //    // Consecutive dots check
+        //    int dotFlag = 0;
+        //    for (int i = 0; i < toBytes.Length; i++)
+        //    {
+        //        if (toBytes[i] == '.')
+        //        {
+        //            if (dotFlag == 1)
+        //            {
+        //                MessageBox.Show("Wrong IP range");
+        //                return false;
+        //            }
+        //            dotFlag = 1;
+        //        }
+        //        else
+        //        { // not a dot
+        //            dotFlag = 0;
+        //        }
+        //    }
 
-            /* So far we know that the IP is correctly formated xxx.xxx.xxx.xxx or xx.x.xxx.x , we need to check for number range */
-            int currentPosition = 0;
-            int ipSegment = 0; // 4 segments in valid IP number
-            //int ipSegmentPosition = 0; // Number in segment
+        //    /* So far we know that the IP is correctly formated xxx.xxx.xxx.xxx or xx.x.xxx.x , we need to check for number range */
+        //    int currentPosition = 0;
+        //    int ipSegment = 0; // 4 segments in valid IP number
+        //    //int ipSegmentPosition = 0; // Number in segment
 
-            StringBuilder sb = new StringBuilder();
+        //    StringBuilder sb = new StringBuilder();
 
-            while(ipSegment < 4)
-             {
-                while (toBytes[currentPosition] != '.')
-                {
-                    sb.Append(Convert.ToChar(toBytes[currentPosition]));
-                    currentPosition++;
-                    if (currentPosition >= toBytes.Length)
-                    {
-                        break;
-                    }
-                }
-                if (Int32.Parse(sb.ToString()) > 255)
-                {
-                    MessageBox.Show("Wrong IP range");
-                    return false;
-                }
-                sb.Clear();
-                ipSegment++;
-                currentPosition++;
-            }
+        //    while(ipSegment < 4)
+        //     {
+        //        while (toBytes[currentPosition] != '.')
+        //        {
+        //            sb.Append(Convert.ToChar(toBytes[currentPosition]));
+        //            currentPosition++;
+        //            if (currentPosition >= toBytes.Length)
+        //            {
+        //                break;
+        //            }
+        //        }
+        //        if (Int32.Parse(sb.ToString()) > 255)
+        //        {
+        //            MessageBox.Show("Wrong IP range");
+        //            return false;
+        //        }
+        //        sb.Clear();
+        //        ipSegment++;
+        //        currentPosition++;
+        //    }
 
-            return true;
-        }
+        //    return true;
+        //}
 
         private bool validatePORT(TextBox tb)
         {
+            if (tb.Text == "")
+            {
+                return false;
+            }
             int portNum = Int32.Parse(tb.Text);
             if (portNum < 0 || portNum > 65535)
             {
@@ -279,27 +300,28 @@ namespace UDPServer
             return true;
         }
 
-        public void startUDPServer()
-        {
+        //public void startUDPServer()
+        //{
 
-            Server server = new Server(textBox1.Text, Int32.Parse(textBox2.Text), Int32.Parse(textBox3.Text));
-            server.formMain = this;
-            this.serverPtr = server;
-        }
+        //    Server server = new Server(textBox1.Text, Int32.Parse(textBox2.Text), Int32.Parse(textBox3.Text));
+        //    server.formMain = this;
+        //    this.serverPtr = server;
+        //}
 
         public void startUDPServer2()
         {
-            Server_v2 server = new Server_v2(textBox1.Text, Int32.Parse(textBox2.Text), Int32.Parse(textBox3.Text));
+            Server_v2 server = new Server_v2(Int32.Parse(textBox2.Text), Int32.Parse(textBox3.Text));
             Server_v2.formMain = this;
             this.serverPtr2 = server;
         }
 
         bool ValidateInput()
         {
-            if (!validateIP())
-            {
-                return false;
-            }
+            // Not used anymore, now it gets IP automaticly 
+            //if (!validateIP())
+            //{
+            //    return false;
+            //}
 
             if (!validatePORT(textBox2))
             {
@@ -326,6 +348,70 @@ namespace UDPServer
             {
                 this.button3.Enabled = state;
             }
+        }
+
+        private void updateDB_Click(object sender, EventArgs e)
+        {
+            updateDBChangeEnabledState("false"); // Update button enable status
+            UpdateDatabase();
+        }
+
+        private void UpdateDatabase() 
+        {
+            Thread t = new Thread(() => // I want it to be async
+            {
+
+                try
+                {
+                    HashtableAndDatabaseClass.FetchIPFromDatabase(oracleDB);
+                    DateTime localDate = DateTime.Now;
+                    var culture = new CultureInfo("en-GB");
+                    string formatedTime = localDate.ToString(culture);
+                    SetDBStatusText("DB status: Last time updated > " + formatedTime);
+
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Retrieve from database failed");
+                }
+                finally
+                {
+                    updateDBChangeEnabledState("true"); // Update button enable status
+                }
+            }
+            ); // End lambda expression
+             
+            t.Start();
+
+
+
+        }
+
+        public void updateDBChangeEnabledState(string status)
+        {
+            if (this.updateDB.InvokeRequired)
+            {
+                SetTextCallback d = new SetTextCallback(updateDBChangeEnabledState); // This delegatge is not mentioned for this, but it can be used for this too
+                this.Invoke(d, new object[] { status });
+            }
+            else
+            {
+                if (status.Equals("true", StringComparison.OrdinalIgnoreCase))
+                {
+                    this.updateDB.Enabled = true;
+                }
+                else if (status.Equals("false", StringComparison.OrdinalIgnoreCase))
+                {
+                    this.updateDB.Enabled = false;
+                }
+            }
+        }
+
+        private void buttonAddIP_Click(object sender, EventArgs e)
+        {
+            FormManualAddIP f = new FormManualAddIP();
+            f.serverPtr2 = serverPtr2;
+            f.Show();
         }
     }
 }

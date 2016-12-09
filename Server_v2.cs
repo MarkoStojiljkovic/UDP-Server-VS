@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using CustomTypes;
 
 namespace UDPServer
 {
@@ -13,7 +14,7 @@ namespace UDPServer
     {
         public static int defaultUDPSendingPort = 4023;
         public static int defaultUDPListeningPort = 4023;
-        public static string defaultIpAddress = "192.168.2.22";
+        public static string defaultIpAddress = "192.168.2.254";
         public static Thread UDPThread = null;
         public static FormMain formMain = null;
         public static bool Kill = false;
@@ -25,12 +26,11 @@ namespace UDPServer
         static UdpClient socket;
         static IPEndPoint sender;
 
-        public Server_v2(string s, int listeningPort, int sendingPort)
+        public Server_v2(int listeningPort, int sendingPort)
         {
             isActive = true;
             defaultUDPListeningPort = listeningPort;
             defaultUDPSendingPort = sendingPort;
-            defaultIpAddress = s;
             
             IPSendTo = IPAddress.Parse(defaultIpAddress);
             ipep = new IPEndPoint(IPAddress.Any, defaultUDPListeningPort);
@@ -72,7 +72,35 @@ namespace UDPServer
                         }
                         else // For now it is only received Alarm 
                         {
-                            byte[] finalMessage = MessageProcesser.ProcessAlarmResponse(data); // This will: decode, print text, save log and return ACK
+                            string xmlData = System.Text.Encoding.Default.GetString(data);
+                            senderInfo si = new senderInfo();
+                            // Assign default value
+                            si.errorCode = "none";
+
+                            si = MessageProcesserXML.ProcessAlarmResponseXML(xmlData);
+                            //byte[] finalMessage = MessageProcesserXML.ProcessAlarmResponseXML(xmlData); // This will: decode, and fill struct
+                            //if (System.Text.Encoding.Default.GetString(finalMessage).Equals("error", StringComparison.OrdinalIgnoreCase))
+                            if (si.error)
+                            {
+                                continue; // Something went wrong, abort
+                            }
+
+                            //string sIP = MessageProcesserXML.
+                            si.trueIPAddress = HashtableAndDatabaseClass.FetchIPFromMac(si.mac);
+                            if (si.trueIPAddress == null)
+                            {
+                                continue; // Hashtable doesn't countain that MAC, abort everything (writing in log and display too)
+                            }
+
+                            // Write log and to display
+                            WriteOnDisplayAndStorage(si); // Will use information stored on si structure
+
+
+                            // Form responce
+                            byte[] finalMessage = Encoding.ASCII.GetBytes("ACK " + si.seq);
+                            
+                            sender = new IPEndPoint(IPAddress.Parse(si.trueIPAddress), defaultUDPSendingPort);
+                            
                             socket.Send(finalMessage, finalMessage.Length, sender);
                             Console.WriteLine("Phase Data sent \n");
                         }
@@ -89,6 +117,7 @@ namespace UDPServer
                         }
                         Kill = false;
                         Console.WriteLine("Phase Exit \n");
+                        formMain.SetStatusText("Status: Stopped");
                         isActive = false;
                         return;
                     }
@@ -117,8 +146,35 @@ namespace UDPServer
             }
         }
 
-        
+        private void WriteOnDisplayAndStorage(senderInfo si)
+        {
+            string MAC = si.mac;
+            string alarmName = si.name;
+            string status = si.value.ToString();
+            string timeStamp = si.time;
+            string packetNum = si.seq;
 
+            string messageToAppend = MAC + " " + alarmName + " " + status + " " + timeStamp + " " + packetNum + Environment.NewLine;
+            formMain.SetText(messageToAppend);
+
+            Storage.UpdateFolderTimeStamp(); // Update file, in case it is new day
+            Storage.AppendTextToFile(messageToAppend);
+
+        }
+
+        public void updateSender(string ip) // This is called to update sender for manualy added devices so you can send commands and not wait for them to send first
+        {
+            try
+            {
+                IPAddress tempIPSendTo = IPAddress.Parse(ip);
+                sender = new IPEndPoint(tempIPSendTo, defaultUDPSendingPort); // Update current ip with default port
+
+            }
+            catch (Exception)
+            {
+                return;
+            }
+        }
 
     }
 }
